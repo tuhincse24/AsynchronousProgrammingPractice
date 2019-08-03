@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AsynchronousProgrammingPractice
 {
@@ -7,11 +8,12 @@ namespace AsynchronousProgrammingPractice
     {
         static void Main(string[] args)
         {
-            for (int counter = 1; counter < 9; counter++)
+            for (int counter = 1; counter < 10; counter++)
             {
                 if (counter % 3 == 0)
                 {
-                    WriteFactorial(counter);
+                    //WriteFactorial(counter);
+                    WriteFactorialAsyncUsingTask(counter);
                 }
                 else
                 {
@@ -34,6 +36,18 @@ namespace AsynchronousProgrammingPractice
                 result = result * i;
             }
             return result;
+        }
+        private static void WriteFactorialAsyncUsingTask(int no)
+        {
+            Task<int> task = Task.Run<int>(() =>
+            {
+                int result = FindFactorialWithSimulatedDelay(no);
+                return result;
+            });
+            task.ContinueWith(new Action<Task<int>>((input) =>
+            {
+                Console.WriteLine("Factorial of {0} is {1}", no, input.Result);
+            }));
         }
     }
 }
