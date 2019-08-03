@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,18 +9,21 @@ namespace AsynchronousProgrammingPractice
     {
         static void Main(string[] args)
         {
+            var tskList = new List<Task>();
             for (int counter = 1; counter < 10; counter++)
             {
                 if (counter % 3 == 0)
                 {
                     //WriteFactorial(counter);
-                    WriteFactorialAsyncUsingTask(counter);
+                    //WriteFactorialAsyncUsingTask(counter);
+                    tskList.Add(WriteFactorialAsyncUsingAwait(counter));
                 }
                 else
                 {
                     Console.WriteLine(counter);
                 }
             }
+            Task.WaitAll(tskList.ToArray());
             Console.ReadLine();
         }
         private static void WriteFactorial(int no)
@@ -53,6 +57,16 @@ namespace AsynchronousProgrammingPractice
                 }
                 Console.WriteLine("Factorial of {0} is {1}", no, input.Result);
             }));
+        }
+        private static async Task WriteFactorialAsyncUsingAwait(int facno)
+        {
+            int result = await Task.Run(() => FindFactorialWithSimulatedDelay(facno));
+            if (facno == 6)
+            {
+                Console.WriteLine("Sleeping for 10000 ms");
+                Thread.Sleep(10000);
+            }
+            Console.WriteLine("Factorial of {0} is {1}", facno, result);
         }
     }
 }
