@@ -46,6 +46,11 @@ namespace AsynchronousProgrammingPractice
             });
             task.ContinueWith(new Action<Task<int>>((input) =>
             {
+                if (no == 6)
+                {
+                    Console.WriteLine("Sleeping for 10000 ms");
+                    Thread.Sleep(10000);
+                }
                 Console.WriteLine("Factorial of {0} is {1}", no, input.Result);
             }));
         }
